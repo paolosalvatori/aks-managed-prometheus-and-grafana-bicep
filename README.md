@@ -38,7 +38,7 @@ Monitoring the health and performance of an [Azure Kubernetes Service(AKS)](http
 - Deploy the [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/) via [Helm](https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm) and configure it to expose metrics in [Prometheus](https://prometheus.io/) format.
 - Create an [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) dashboard to analyze [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/) metrics.
 - Configure the [Azure Kubernetes Service(AKS) Network Observability](hhttps://learn.microsoft.com/en-us/azure/aks/network-observability-overview)
-- Create an [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) dashboard to visualize Network Observaibility metrics into Prometheus format.
+- Create an [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) dashboard to visualize Network Observability metrics in Prometheus format.
 
 ## Prerequisites
 
@@ -47,9 +47,7 @@ Monitoring the health and performance of an [Azure Kubernetes Service(AKS)](http
 - Azure CLI version 2.50.0 or later installed. to install or upgrade, see [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli).
 - `aks-preview` Azure CLI extension of version 0.5.145 or later installed
 
-You can run `az --version` to verify above versions.
-
-to install the aks-preview extension, run the following command:
+You can run `az --version` to verify the above version. Run the following command to install the aks-preview extension:
 
 ```bash
 az extension add --name aks-preview
@@ -206,7 +204,7 @@ Data collection rules can also be used to configure the Container Insights exten
 
 ## Data Collection Endpoints of an Azure Monitor Workspace
 
-Azure Monitor workspace provides data collection endpoints that enable AKS clusters to send their metrics to a central location. By configuring the clusters to forward metrics to the Azure Monitor workspace, you ensure that all the necessary data is collected and available for further analysis. When you configure your Azure Kubernetes Service (AKS) cluster to send data to an Azure Monitor workspace, a containerized version of the Azure Monitor agent is installed in the `kube-system` namespace with a metrics extension. The Azure Monitor metrics agent's architecture utilizes a ReplicaSet and a DaemonSet. The ReplicaSet pod scrapes cluster-wide targets such as `kube-state-metrics` and custom application targets that are specified. The DaemonSet pods scrape targets solely on the node that the respective pod is deployed on, such as `node-exporter``. Data collection endpoints are used by the data collection rules for ingesting Prometheus metrics from the Azure Monitor metrics agent's running on your AKS clusters.
+Azure Monitor workspace provides data collection endpoints that enable AKS clusters to send their metrics to a central location. By configuring the clusters to forward metrics to the Azure Monitor workspace, you ensure that all the necessary data is collected and available for further analysis. When you configure your Azure Kubernetes Service (AKS) cluster to send data to an Azure Monitor workspace, a containerized version of the Azure Monitor agent is installed in the `kube-system` namespace with a metrics extension. The Azure Monitor metrics agent's architecture utilizes a ReplicaSet and a DaemonSet. The ReplicaSet pod scrapes cluster-wide targets such as `kube-state-metrics` and custom application targets that are specified. The DaemonSet pods scrape targets solely on the node that the respective pod is deployed on, such as `node-exporter``. Data collection endpoints are used by the data collection rules for ingesting Prometheus metrics from the Azure Monitor metrics agents running on your AKS clusters.
 
 ## Azure Monitor managed service for Prometheus Rule Groups
 
@@ -235,21 +233,21 @@ Azure Managed Prometheus rule groups, recording rules and alert rules can be cre
 - `Azure Managed Prometheus`: It integrates with Azure Monitor and can send metrics data directly to Azure Monitor for alerting and analysis.
 - `Azure Managed Grafana`: It can connect to various data sources including Azure Monitor, Azure Log Analytics, and Azure Managed Prometheus to visualize the collected data.
 
-Data Collection:
+### Data Collection:
 
 - `Azure Log Analytics`: It can collect logs and metrics data from various sources like virtual machines, containers, applications, and custom data sources.
 - `Container Insights`: It collects metrics, logs, and metadata specifically from Kubernetes clusters and containers.
 - `Azure Managed Prometheus`: It collects time-series metrics data from applications or infrastructure components.
 - `Azure Managed Grafana`: It visualizes the data collected by other monitoring solutions like Azure Monitor, Azure Log Analytics, and Azure Managed Prometheus.
 
-Visualization:
+### Visualization:
 
 - `Azure Log Analytics`: It provides its visualization capabilities with query-based visualizations and advanced workbook features.
 - `Container Insights`: It provides built-in visualizations and dashboards specific to Kubernetes clusters.
 - `Azure Managed Prometheus`: It supports powerful graphing and visualization capabilities using [Prometheus Query Language (PromQL)](https://prometheus.io/docs/prometheus/latest/querying/basics/) and can be integrated with Grafana for more advanced visualizations.
 - `Azure Managed Grafana`: It is a dedicated visualization tool that offers highly customizable and interactive dashboards.
 
-In summary, Azure Log Analytics, Container Insights, Azure Managed Prometheus, and Azure Managed Grafana have different focuses and functionalities. While Azure Log Analytics and Container Insights are versatile monitoring solutions, Azure Managed Prometheus and Azure Managed Grafana provide specific features for metrics collection and visualization. The choice between them depends on the specific monitoring needs and preferences.
+Azure Log Analytics, Container Insights, Azure Managed Prometheus, and Azure Managed Grafana have different focuses and functionalities. While Azure Log Analytics and Container Insights are versatile monitoring solutions, Azure Managed Prometheus and Azure Managed Grafana provide specific metrics collection and visualization features. The choice between them depends on the specific monitoring needs and preferences.
 
 ## Deploy the Bicep modules
 
@@ -1037,10 +1035,10 @@ The Bicep module deploys the following Azure resources and child resources:
 - An [Azure Monitor workspace for Managed Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview)
 - A data collection endpoint used by the AKS-hosted Azure Monitor Agents to send Prometheus metrics to the Azure Monitor workspace.
 - A data collection rule that uses the data collection endpoint defined by the previous step and defines the Azure Monitor worekspace as a destination of the Prometheus metrics collected by the Azure Monitor Agents on the AKS cluster.
-- A data collection rule association that binds the the data collection rule with the AKS cluster.
-- A series of Prometheus rule groups which define [Prometheus recording rules](https://aka.ms/azureprometheus-promio-recrules) and [Prometheus alert rules](https://aka.ms/azureprometheus-promio-alertrules) for Linux and Windows node pools.
+- A data collection rule association that binds the data collection rule with the AKS cluster.
+- A series of Prometheus rule groups that define [Prometheus recording rules](https://aka.ms/azureprometheus-promio-recrules) and [Prometheus alert rules](https://aka.ms/azureprometheus-promio-alertrules) for Linux and Windows node pools.
 
-When an Azure Monitor workspace is created, it automatically creates a data collection rule and endpoint resources. For instance, when you create an Azure Monitor workspace resource, a resource group named `MA_<worskpace-name>_<region>_managed` is created, along with a data collection rule and endpoint resources. These resources are associated with the Azure Monitor workspace.
+Deploying an Azure Monitor workspace automatically creates a data collection rule and endpoint resources. For instance, when you create an Azure Monitor workspace resource, a resource group named `MA_<worskpace-name>_<region>_managed` and a data collection rule and endpoint resources are created. These resources are associated with the Azure Monitor workspace.
 
 ## Azure Managed Grafana Bicep module
 
@@ -1184,9 +1182,9 @@ output location string = managedGrafana.location
 output principalId string = managedGrafana.identity.principalId
 ```
 
-The Bicep modules creates an [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) with a system-assigned managed identity. The `azureMonitorWorkspaceIntegrations` array contains the resource id of the [Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview). For more information on how to integrate an Azure Managed Grafana with an Azure Monitor workspace, see [Collect Prometheus metrics from an AKS cluster](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-enable?tabs=bicep).
+The Bicep modules creates an [Azure Managed Grafana](https://learn.microsoft.com/en-us/azure/managed-grafana/overview) with a system-assigned managed identity. The `azureMonitorWorkspaceIntegrations` array contains the resource id of the [Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview). For more information integrating an Azure Managed Grafana with an Azure Monitor workspace, see [Collect Prometheus metrics from an AKS cluster](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-enable?tabs=bicep).
 
-By default, when a Grafana instance is created, Azure Managed Grafana grants it the `Monitoring Reader` role for all Azure Monitor data and Log Analytics resources within a subscription. This means that the new Grafana instance can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources, and any logs stored in Log Analytics workspaces in the subscription. The Bicep module manually assigns the `Monitoring Reader` role to the Azure Managed Grafana system-assigned managed identity at the workspace scope. For more information, see [How to modify access permissions to Azure Monitor](https://learn.microsoft.com/en-us/azure/managed-grafana/how-to-permissions?tabs=azure-cli).
+By default, when a Grafana instance is created, Azure Managed Grafana grants it the `Monitoring Reader` role for all Azure Monitor data and Log Analytics resources within a subscription. This means the new Grafana instance can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources, and any logs stored in Log Analytics workspaces in the subscription. The Bicep module manually assigns the `Monitoring Reader` role to the Azure Managed Grafana system-assigned managed identity at the workspace scope. For more information, see [How to modify access permissions to Azure Monitor](https://learn.microsoft.com/en-us/azure/managed-grafana/how-to-permissions?tabs=azure-cli).
 
 The Bicep module assigns the `Monitoring Data Reader` role to the Azure Managed Grafana system-assigned managed identity with the Azure Monitor workspace. For more information, see [Use Azure Monitor managed service for Prometheus as data source for Grafana using managed system identity](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-grafana).
 
@@ -1271,7 +1269,7 @@ The sample makes use of a [Deployment Script](https://learn.microsoft.com/en-us/
 - [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/)
 - [Cert-Manager](https://cert-manager.io/docs/)
 
-This sample uses the [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/) to expose the chatbot to the public internet. Companion Bicep modules allow to deploy an [Azure Application Gateway](https://learn.microsoft.com/en-us/azure/application-gateway/overview) and [Application Gateway Ingress Controller](https://learn.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview) just by setting the value of the `applicationGatewayEnabled` to `true`. So you can easily modify this sample to expose the chatbot to the public internet using the [Application Gateway Ingress Controller](https://learn.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview) instead of the [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/).
+This sample uses the [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/) to expose Linux and Windows demo applications that you can find in the `apps`` folder.
 
 ```bash
 # Install kubectl
@@ -1480,12 +1478,12 @@ Manually install the `windows-exporter` DaemonSet on Windows nodes to scrape met
 You can download, customize, and deploy the [windows-exporter-daemonset](https://github.com/prometheus-community/windows_exporter/blob/master/kubernetes/windows-exporter-daemonset.yaml) YAML manifest as follows:
 
 ```bash
-   kubectl apply -f windows-exporter-daemonset.yaml
+kubectl apply -f windows-exporter-daemonset.yaml
 ```
 
-If you defined one ore more taints on your Windows agent pools, make sure to add the necessary tolerations to the pod definition in the YAML manifest, as shown in the following code that you can find the `windows/windows-exporter-daemonset.yaml` file:
+If you defined one or more taints on your Windows agent pools, make sure to add the necessary tolerations to the pod definition as shown in the `windows/windows-exporter-daemonset.yaml` YAML manifest:
 
-   ```yaml
+```yaml
 apiVersion: v1
 
 kind: Namespace
@@ -1639,17 +1637,17 @@ Finally, you have to enable the recording rules that are required for the out-of
 - If onboarding using an ARM template, Bicep, or Azure Policy, enable the `Microsoft.AlertsManagement/prometheusRuleGroups` resources used to collect Windows metrics.
 - If the cluster is already onboarded, use [this ARM template](https://github.com/Azure/prometheus-collector/blob/kaveesh/windows_recording_rules/AddonArmTemplate/WindowsRecordingRuleGroupTemplate/WindowsRecordingRules.json) and [this parameter file](https://github.com/Azure/prometheus-collector/blob/kaveesh/windows_recording_rules/AddonArmTemplate/WindowsRecordingRuleGroupTemplate/WindowsRecordingRulesParameters.json) to create the rule groups.
 
-The Bicep module in this project automatically creates and enable the necessary rule groups to collect metrics from Windows nodes in Prometheus format. For more information on how to customize metrics scraping for a Kubernetes cluster with the metrics addon in Azure Monitor., see [Customize scraping of Prometheus metrics in Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration)
+The Bicep module in this project automatically creates and enables the necessary rule groups to collect metrics from Windows nodes in Prometheus format. For more information on how to customize metrics scraping for a Kubernetes cluster with the metrics addon in Azure Monitor., see [Customize scraping of Prometheus metrics in Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration).
 
 ## Verify the Deployment of the Azure Monitor Agents
 
-Run the following command to verify that the DaemonSet was deployed properly on the Linux node pools:
+Run the following command to verify that the DaemonSet was correctly deployed on the Linux node pools:
 
 ```bash
 kubectl get ds ama-metrics-node --namespace=kube-system
 ```
 
-The number of pods should be equal to the number of Linux nodes on the cluster. The output should resemble the following example:
+The number of pods should equal the number of Linux nodes on the cluster. The output should resemble the following example:
 
 ```bash
 User@aksuser:~$ kubectl get ds ama-metrics-node --namespace=kube-system
@@ -1657,13 +1655,13 @@ NAME               DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SEL
 ama-metrics-node   1         1         1       1            1           <none>          10h
 ```
 
-Run the following command to verify that the DaemonSet was deployed properly on the Windows node pools:
+Run the following command to verify that the DaemonSet was correctly deployed on the Windows node pools:
 
 ```bash
 kubectl get ds ama-metrics-win-node --namespace=kube-system
 ```
 
-The number of pods should be equal to the number of Windows nodes on the cluster. The output should resemble the following example:
+The number of pods should equal the number of Windows nodes on the cluster. The output should resemble the following example:
 
 ```bash
 User@aksuser:~$ kubectl get ds ama-metrics-node --namespace=kube-system
@@ -1783,7 +1781,7 @@ The following figure shows the `Kubernetes / Compute Resources / Cluster (Window
 
 ## NGINX Ingress Controller
 
-The [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#configure-prometheus) can be configured to generate [metrics in Prometheus format](https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#exposed-metrics). If you deployed the NGINX Ingress controller using a Helm chart, the easiest way to configure the controller for metrics is via Helm upgrade. Assuming you have installed the NGINX ingress controller as a Helm release named `ingress-nginx` in the `ingress-basic` namespace, then you can simply type the command shown below:
+The [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#configure-prometheus) can be configured to generate [metrics in Prometheus format](https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#exposed-metrics). If you deployed the NGINX Ingress controller using a Helm chart, the easiest way to configure the controller for metrics is via Helm upgrade. Assuming you have installed the NGINX ingress controller as a Helm release named `ingress-nginx` in the `ingress-basic` namespace, then you can type the command shown below:
 
 ```bash
 helm upgrade ingress-nginx ingress-nginx/ingress-nginx \
@@ -1973,7 +1971,7 @@ metadata:
   namespace: kube-system
 ```
 
-You can deploy the above configmap using thge following command:
+You can deploy the above configmap using the following command:
 
 ```bash
 kubectl apply -f ama-metrics-prometheus-config-configmap.yaml
@@ -1993,15 +1991,15 @@ None of the four configmaps exist by default in the cluster when Azure Managed P
 2. [`ama-metrics-prometheus-config`](https://aka.ms/azureprometheus-addon-rs-configmap)
    This config map can be used to provide Prometheus scrape config for addon replica. Addon runs a singleton replica, and any cluster level services can be discovered and scraped by providing scrape jobs in this configmap. You can take the sample configmap from the above git hub repo, add scrape jobs that you  would need and apply/deploy the config map to `kube-system` namespace for your cluster.
 3. [`ama-metrics-prometheus-config-node`](https://aka.ms/azureprometheus-addon-ds-configmap)
-    This config map can be used to provide Prometheus scrape config for addon DaemonSet that runs on every **Linux** node in the cluster, and any node level targets on each node can be scraped by providing scrape jobs in this configmap. When you use this configmap, you can use `$NODE_IP` variable in your scrape config, which gets substituted by corresponding  node's ip address in DaemonSet pod running on each node. This way you get access to scrape anything that runs on that node from the metrics addon DaemonSet. **Please be careful when you use discoveries in scrape config in this node level config map, as every node in the cluster will setup & discover the target(s) and will collect redundant metrics**.
+    This config map can be used to provide Prometheus scrape config for addon DaemonSet that runs on every Linux node in the cluster, and any node level targets on each node can be scraped by providing scrape jobs in this configmap. When you use this configmap, you can use `$NODE_IP` variable in your scrape config, which gets substituted by corresponding  node's ip address in DaemonSet pod running on each node. This way you get access to scrape anything that runs on that node from the metrics addon DaemonSet. Please be careful when you use discoveries in scrape config in this node level config map, as every node in the cluster will setup & discover the target(s) and will collect redundant metrics.
     You can take the sample configmap from the above git hub repo, add scrape jobs that you  would need and apply/deploy the config map to `kube-system` namespace for your cluster
 4. [`ama-metrics-prometheus-config-node-windows`](https://aka.ms/azureprometheus-addon-ds-configmap-windows)
-    This config map can be used to provide Prometheus scrape config for addon DaemonSet that runs on every **Windows** node in the cluster, and node level targets on each node can be scraped by providing scrape jobs in this configmap. When you use this configmap, you can use `$NODE_IP` variable in your scrape config, which will be substituted by corresponding  node's ip address in DaemonSet pod running on each node. This way you get access to scrape anything that runs on that node from the metrics addon DaemonSet. **Please be careful when you use discoveries in scrape config in this node level config map, as every node in the cluster will setup & discover the target(s) and will collect redundant metrics**.
+    This config map can be used to provide Prometheus scrape config for addon DaemonSet that runs on every Windows node in the cluster, and node level targets on each node can be scraped by providing scrape jobs in this configmap. When you use this configmap, you can use `$NODE_IP` variable in your scrape config, which will be substituted by corresponding  node's ip address in DaemonSet pod running on each node. This way you get access to scrape anything that runs on that node from the metrics addon DaemonSet. Please be careful when you use discoveries in scrape config in this node level config map, as every node in the cluster will setup & discover the target(s) and will collect redundant metrics.
     You can take the sample configmap from the above git hub repo, add scrape jobs that you  would need and apply/deploy the config map to `kube-system` namespace for your cluster
 
 For more information, see [Customize scraping of Prometheus metrics in Azure Monitor managed service for Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration).
 
-The complete list of Prometheus metrics exposed by the NGINX ingress controller is available in the [documentation](https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#exposed-metrics). NGINX provides two [Grafana dashboards](https://github.com/kubernetes/ingress-nginx/blob/main/deploy/grafana/dashboards/README.md) to visualize these metrics. I customized these two dashboards for Azure Managed Grafana. In particular, I added a `cluster` variable that allows to select one or all AKS clusters. You can find the definition in JSON format of these dashboards under the `nginx` folder.
+The complete list of Prometheus metrics exposed by the NGINX ingress controller is available in the [documentation](https://kubernetes.github.io/ingress-nginx/user-guide/monitoring/#exposed-metrics). NGINX provides two [Grafana dashboards](https://github.com/kubernetes/ingress-nginx/blob/main/deploy/grafana/dashboards/README.md) to visualize these metrics. I customized these two dashboards for Azure Managed Grafana. In particular, I added a `cluster` variable that allows to select one or all AKS clusters. You can find these dashboards' definitions in JSON format under the `nginx` folder.
 
 The `Kubernetes / NGINX Ingress controller / By Cluster` dashboard allows to filter by`cluster`,`namespace`,`controller class`,`controller`, and`ingress` and shows the following metrics:
 
@@ -2038,47 +2036,47 @@ The `Kubernetes / NGINX Ingress controller / Request Handling Performance` dashb
 
 ## Network Observability
 
-Network observability is an important part of maintaining a healthy and performant Kubernetes cluster. By collecting and analyzing data about network traffic, you can gain insights into how your cluster is operating and identify potential problems before they cause outages or performance degradation. For more information, see [What is Azure Kubernetes Service (AKS) Network Observability?](https://learn.microsoft.com/en-us/azure/aks/network-observability-overview)
+Network observability is essential to maintaining a healthy and performant Kubernetes cluster. By collecting and analyzing data about network traffic, you can gain insights into how your cluster operates and identify potential problems before they cause outages or performance degradation. For more information, see [What is Azure Kubernetes Service (AKS) Network Observability?](https://learn.microsoft.com/en-us/azure/aks/network-observability-overview)
 
 ![Network Observability](images/network-observability.png)
 
 Networking Observability add-on operates seamlessly on non-Cilium and Cilium data-planes. Once enabled, this feature provides network administrators, cluster security administrators, and DevOps engineers with a tool to monitor network issues in your Azure Kubernetes Service (AKS) cluster.
 
-When the Network Observability add-on is enabled, it allows for the collection and conversion of useful metrics into Prometheus format, which can then be visualized in Grafana. There are two options available for using Prometheus and Grafana in this context: [Azure Managed Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) and [Azure Managed Grafana](/azure/azure-monitor/visualize/grafana-plugin) or bring your own (BYO) in-cluster or out-cluster Prometheus and Grafana.
+When the Network Observability add-on is enabled, it allows for collecting and converting useful metrics into Prometheus format, which can then be visualized in Grafana. There are two options available for using Prometheus and Grafana in this context: [Azure Managed Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) and [Azure Managed Grafana](/azure/azure-monitor/visualize/grafana-plugin) or bring your own (BYO) in-cluster or out-cluster Prometheus and Grafana.
 
 - Azure Managed Prometheus and Grafana: This option involves using a managed service provided by Azure as shown in this article. The managed service takes care of the infrastructure and maintenance of Prometheus and Grafana, allowing you to focus on configuring and visualizing your metrics. This option is convenient if you prefer not to manage the underlying infrastructure and eventually shared the same instances across multiple AKS clusters. For more information, see [Setup Network Observability for Azure Kubernetes Service (AKS) Azure managed Prometheus and Grafana](network-observability-managed-cli.md)
 
 - BYO Prometheus and Grafana: Alternatively, you can choose to set up your own Prometheus and Grafana instancesn inside or outside the cluster. In this case, you're responsible for provisioning and managing the infrastructure required to run Prometheus and Grafana. Install and configure Prometheus to scrape the metrics generated by the Network Observability add-on and store them. Similarly, Grafana needs to be set up to connect to Prometheus and visualize the collected data. For more information, see [Setup Network Observability for Azure Kubernetes Service (AKS) BYO Prometheus and Grafana](network-observability-byo-cli.md)
 
-In both cases, you can use the ID 18814 to import the [Kubernetes / Networking](https://grafana.com/grafana/dashboards/18814-kubernetes-networking/) dashboard from the Grafana's public dashboard repository. This Grafana dashboard for Network Observability add-on for AKS and  provide the following benefits:
+In both cases, you can use ID 18814 to import the [Kubernetes / Networking](https://grafana.com/grafana/dashboards/18814-kubernetes-networking/) dashboard from Grafana's public dashboard repository. This Grafana dashboard for Network Observability add-on for AKS provides the following benefits:
 
-- Get access to cluster level network metrics like packet drops, connections stats and more.
+- Give visibility of the cluster-level network metrics like packet drops, connections stats, and more.
 - (GA) Access to pod-level metrics and network debuggability features
 - Support for all Azure CNIs - AzureCNI and AzureCNI (Powered by Cilium)
 - Support for all AKS node types - Linux and Windows
 - Easy deployment using native Azure tools - AKS CLI, ARM templates, PowerShell, etc.
 - Seamless integration with the Azure managed Prometheus and Azure-managed Grafana offerings.
 
-Under the `network-observability` folder you can find the `Kubernetes / Network Observability / Networking` dashboard in JSON format that customizes the [Kubernetes / Networking](https://grafana.com/grafana/dashboards/18814-kubernetes-networking/) dashboard by adding the possibility to filter by cluster.
+Under the `network-observability` folder, you can find the `Kubernetes / Network Observability / Networking` dashboard in JSON format that customizes the [Kubernetes / Networking](https://grafana.com/grafana/dashboards/18814-kubernetes-networking/) dashboard by adding the possibility to filter by cluster.
 
 ![Network Observability Dashboard](images/network-observability-dashboard.png)
 
-The Network Observability add-on currently only supports node level metrics in both Linux and Windows platforms. The below table outlines the different metrics generated by the Network Observability add-on.
+The Network Observability add-on currently only supports node-level metrics in Linux and Windows platforms. The table below outlines the different metrics generated by the Network Observability add-on.
 
 | Metric Name | Description | Labels | Linux | Windows |
 |-------------|-------------|--------|-------|---------|
-| **kappie_forward_count** | Total forwarded packet count | Direction, NodeName, Cluster | Yes | Yes |
-| **kappie_forward_bytes** | Total forwarded byte count | Direction, NodeName, Cluster | Yes | Yes |
-| **kappie_drop_count** | Total dropped packet count | Reason, Direction, NodeName, Cluster | Yes | Yes |
-| **kappie_drop_bytes** | Total dropped byte count | Reason, Direction, NodeName, Cluster | Yes | Yes |
-| **kappie_tcp_state** | TCP active socket count by TCP state. | State, NodeName, Cluster | Yes | Yes |
-| **kappie_tcp_connection_remote** | TCP active socket count by remote address. | Address, Port, NodeName, Cluster | Yes | No |
-| **kappie_tcp_connection_stats** | TCP connection statistics. (ex: Delayed ACKs, TCPKeepAlive, TCPSackFailures) | Statistic, NodeName, Cluster | Yes | Yes |
-| **kappie_tcp_flag_counters** | TCP packets count by flag. | Flag, NodeName, Cluster | Yes | Yes |
-| **kappie_ip_connection_stats** | IP connection statistics. | Statistic, NodeName, Cluster | Yes | No |
-| **kappie_udp_connection_stats** | UDP connection statistics. | Statistic, NodeName, Cluster | Yes | No |
-| **kappie_udp_active_sockets** | UDP active socket count | NodeName, Cluster | Yes | No |
-| **kappie_interface_stats** | Interface statistics. | InterfaceName, Statistic, NodeName, Cluster | Yes | Yes |
+| kappie_forward_count | Total forwarded packet count | Direction, NodeName, Cluster | Yes | Yes |
+| kappie_forward_bytes | Total forwarded byte count | Direction, NodeName, Cluster | Yes | Yes |
+| kappie_drop_count | Total dropped packet count | Reason, Direction, NodeName, Cluster | Yes | Yes |
+| kappie_drop_bytes | Total dropped byte count | Reason, Direction, NodeName, Cluster | Yes | Yes |
+| kappie_tcp_state | TCP active socket count by TCP state. | State, NodeName, Cluster | Yes | Yes |
+| kappie_tcp_connection_remote | TCP active socket count by remote address. | Address, Port, NodeName, Cluster | Yes | No |
+| kappie_tcp_connection_stats | TCP connection statistics. (ex: Delayed ACKs, TCPKeepAlive, TCPSackFailures) | Statistic, NodeName, Cluster | Yes | Yes |
+| kappie_tcp_flag_counters | TCP packets count by flag. | Flag, NodeName, Cluster | Yes | Yes |
+| kappie_ip_connection_stats | IP connection statistics. | Statistic, NodeName, Cluster | Yes | No |
+| kappie_udp_connection_stats | UDP connection statistics. | Statistic, NodeName, Cluster | Yes | No |
+| kappie_udp_active_sockets | UDP active socket count | NodeName, Cluster | Yes | No |
+| kappie_interface_stats | Interface statistics. | InterfaceName, Statistic, NodeName, Cluster | Yes | Yes |
 
 You can enable the Network Observability add-on when you deploy the Azure Kubernetes Service (AKS) cluster via Bicep by setting the value of the `monitoringEnabled` parameter to `true`. This will set the `networkProfile.monitoring.enabled` property to `true` of the AKS cluster in the `aksCluster.bicep` module.
 
